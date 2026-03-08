@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_08_171704) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_08_171828) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -48,6 +48,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_08_171704) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["jti"], name: "index_jwt_denylists_on_jti", unique: true
+  end
+
+  create_table "reservations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "restaurant_id", null: false
+    t.integer "party_size"
+    t.datetime "requested_at"
+    t.text "note"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["restaurant_id"], name: "index_reservations_on_restaurant_id"
+    t.index ["user_id"], name: "index_reservations_on_user_id"
   end
 
   create_table "restaurants", force: :cascade do |t|
@@ -101,6 +114,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_08_171704) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "reservations", "restaurants"
+  add_foreign_key "reservations", "users"
   add_foreign_key "specials", "restaurants"
   add_foreign_key "swipes", "restaurants"
   add_foreign_key "swipes", "users"

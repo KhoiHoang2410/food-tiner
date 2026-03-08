@@ -10,11 +10,13 @@ Rails.application.routes.draw do
 
       resources :restaurants, only: [:index, :show]
       resources :swipes, only: [:create]
+      resources :reservations, only: [:index, :create, :destroy]
 
       namespace :my do
         resource :restaurant, only: [:show, :create, :update]
         resources :photos, only: [:create, :destroy]
         resources :specials, only: [:create, :destroy]
+        resources :reservations, only: [:index, :update]
       end
     end
   end
