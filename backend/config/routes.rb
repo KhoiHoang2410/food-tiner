@@ -8,6 +8,9 @@ Rails.application.routes.draw do
       post 'auth/login', to: 'auth#login'
       delete 'auth/logout', to: 'auth#logout'
 
+      resources :restaurants, only: [:index, :show]
+      resources :swipes, only: [:create]
+
       namespace :my do
         resource :restaurant, only: [:show, :create, :update]
         resources :photos, only: [:create, :destroy]

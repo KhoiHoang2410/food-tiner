@@ -1,4 +1,5 @@
 class Restaurant < ApplicationRecord
+  reverse_geocoded_by :latitude, :longitude
   belongs_to :user, foreign_key: :owner_id
   has_many_attached :photos
   has_many :specials, dependent: :destroy
