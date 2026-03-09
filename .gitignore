@@ -1,0 +1,46 @@
+# OS
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Backend (Rails)
+backend/log/*
+!backend/log/.keep
+backend/tmp/*
+!backend/tmp/.keep
+!backend/tmp/pids/.keep
+!backend/tmp/storage/.keep
+backend/storage/*
+!backend/storage/.keep
+backend/public/assets
+backend/public/packs
+backend/.byebug_history
+backend/coverage/
+
+# Mobile (React Native / Expo)
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+mobile/web-build/
+mobile/.env
+mobile/.env.*
+!mobile/.env.example
+
+# Docs / plans (keep design docs, ignore generated artifacts)
+docs/plans/*.tmp
