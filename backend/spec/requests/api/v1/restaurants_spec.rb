@@ -26,11 +26,20 @@ RSpec.describe 'Restaurants API', type: :request do
       expect(body.all? { |r| r['cuisine_type'] == 'Vietnamese' }).to be true
     end
 
-    it 'excludes already-swiped restaurants' do
+    it 'excludes already-swiped restaurants when unswiped ones remain' do
+      nearby2 = create(:restaurant, latitude: 10.771, longitude: 106.691)
       create(:swipe, user: diner, restaurant: nearby, direction: :left)
       get '/api/v1/restaurants', params: { lat: 10.77, lng: 106.69, radius_km: 5 }, headers: headers
       names = JSON.parse(response.body).map { |r| r['name'] }
       expect(names).not_to include(nearby.name)
+      expect(names).to include(nearby2.name)
+    end
+
+    it 'returns all restaurants when all have been swiped (circular feed)' do
+      create(:swipe, user: diner, restaurant: nearby, direction: :left)
+      get '/api/v1/restaurants', params: { lat: 10.77, lng: 106.69, radius_km: 5 }, headers: headers
+      names = JSON.parse(response.body).map { |r| r['name'] }
+      expect(names).to include(nearby.name)
     end
   end
 
