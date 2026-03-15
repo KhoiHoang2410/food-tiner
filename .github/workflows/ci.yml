@@ -49,7 +49,7 @@ jobs:
         run: bundle exec rails db:schema:load
 
       - name: Run RSpec
-        run: bundle exec rspec --format progress --format RspecJunitFormatter --out tmp/rspec.xml
+        run: bundle exec rspec spec/
         continue-on-error: false
 
       - name: Upload test results
