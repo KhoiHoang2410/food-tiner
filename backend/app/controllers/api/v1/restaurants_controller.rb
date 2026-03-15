@@ -13,7 +13,8 @@ module Api
         restaurants = restaurants.where(price_range: params[:price_range].to_i) if params[:price_range].present?
 
         already_swiped = Swipe.where(user: current_user).pluck(:restaurant_id)
-        restaurants = restaurants.where.not(id: already_swiped) if already_swiped.any?
+        filtered = already_swiped.any? ? restaurants.where.not(id: already_swiped) : restaurants
+        restaurants = filtered.any? ? filtered : restaurants
 
         render json: restaurants.page(params[:page]).per(10)
       end

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import type { RootStackParamList } from '../../../App';
@@ -9,6 +10,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { RestaurantCard } from '../../components/swipe/RestaurantCard';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSwipeFeed, useSwipe } from '../../hooks/useRestaurants';
 
 type Props = {
@@ -19,13 +21,22 @@ const LAT = 10.77;
 const LNG = 106.69;
 
 export default function FeedScreen({ navigation }: Props) {
+  const queryClient = useQueryClient();
   const { data, fetchNextPage } = useSwipeFeed(LAT, LNG);
   const swipe = useSwipe();
   const translateX = useSharedValue(0);
   const rotate = useSharedValue(0);
+  const [index, setIndex] = useState(0);
 
   const restaurants = data?.pages.flat() ?? [];
-  const current = restaurants[0];
+  const current = restaurants[index];
+
+  useEffect(() => {
+    if (data && !current) {
+      queryClient.resetQueries({ queryKey: ['restaurants', LAT, LNG] });
+      setIndex(0);
+    }
+  }, [current, data]);
 
   const handleSwipe = (direction: 'left' | 'right') => {
     if (!current) return;
@@ -35,7 +46,9 @@ export default function FeedScreen({ navigation }: Props) {
     }
     translateX.value = 0;
     rotate.value = 0;
-    if (restaurants.length <= 3) fetchNextPage();
+    const nextIndex = index + 1;
+    setIndex(nextIndex);
+    if (restaurants.length - nextIndex <= 3) fetchNextPage();
   };
 
   const gesture = Gesture.Pan()
@@ -62,8 +75,7 @@ export default function FeedScreen({ navigation }: Props) {
   if (!current) {
     return (
       <View className="flex-1 items-center justify-center bg-gray-50 px-6">
-        <Text className="text-2xl mb-2">🍽️</Text>
-        <Text className="text-gray-500 text-center">No more restaurants nearby. Check back later!</Text>
+        <Text className="text-gray-400 text-center">Loading...</Text>
       </View>
     );
   }
