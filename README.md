@@ -44,7 +44,45 @@ PATCH  /api/v1/my/reservations/:id
 
 ## Quick Start
 
-See setup instructions in each subdirectory:
+### Prerequisites
+
+- Ruby 3.2.0 (`rbenv` or `rvm`)
+- PostgreSQL 14+
+- Node.js 18+
+- [Expo Go](https://expo.dev/go) app or iOS/Android Simulator
+
+### Backend
+
+```bash
+cd backend
+bundle install
+rails db:create db:migrate
+rails db:seed       # optional sample data
+rails server        # http://localhost:3000
+```
+
+### Mobile
+
+```bash
+cd mobile
+npm install
+```
+
+Create `mobile/.env`:
+
+```env
+EXPO_PUBLIC_API_URL=http://localhost:3000/api/v1
+```
+
+> On a physical device, replace `localhost` with your machine's local IP (e.g. `192.168.1.x`).
+
+```bash
+npm start           # scan QR with Expo Go
+npm run ios         # iOS Simulator
+npm run android     # Android Emulator
+```
+
+See full details in each subdirectory:
 
 - [Backend setup](./backend/README.md)
 - [Mobile setup](./mobile/README.md)

@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import * as SecureStore from 'expo-secure-store';
+import { storage } from '../lib/storage';
 import { api } from '../lib/api';
 
 interface AuthResponse {
@@ -14,8 +14,8 @@ export function useLogin() {
       return res.data;
     },
     onSuccess: async (data) => {
-      await SecureStore.setItemAsync('auth_token', data.token);
-      await SecureStore.setItemAsync('user_role', data.user.role);
+      await storage.setItem('auth_token', data.token);
+      await storage.setItem('user_role', data.user.role);
     },
   });
 }
@@ -27,8 +27,8 @@ export function useRegister() {
       return res.data;
     },
     onSuccess: async (data) => {
-      await SecureStore.setItemAsync('auth_token', data.token);
-      await SecureStore.setItemAsync('user_role', data.user.role);
+      await storage.setItem('auth_token', data.token);
+      await storage.setItem('user_role', data.user.role);
     },
   });
 }
