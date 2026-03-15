@@ -39,7 +39,12 @@ restaurants_data = [
     price_range: :budget,
     opening_hours: { mon: "07:00-22:00", tue: "07:00-22:00", wed: "07:00-22:00",
                      thu: "07:00-22:00", fri: "07:00-23:00", sat: "08:00-23:00", sun: "08:00-21:00" },
-    is_active: true
+    is_active: true,
+    photo_urls: [
+      "https://images.unsplash.com/photo-1555126634-323283e090fa?w=800&fit=crop",
+      "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&fit=crop",
+      "https://images.unsplash.com/photo-1553163147-622ab57be1c7?w=800&fit=crop"
+    ]
   },
   {
     owner: owner1,
@@ -53,7 +58,12 @@ restaurants_data = [
     price_range: :moderate,
     opening_hours: { mon: "11:00-21:00", tue: "11:00-21:00", wed: "closed",
                      thu: "11:00-21:00", fri: "11:00-22:00", sat: "10:00-22:00", sun: "10:00-20:00" },
-    is_active: true
+    is_active: true,
+    photo_urls: [
+      "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&fit=crop",
+      "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&fit=crop",
+      "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=800&fit=crop"
+    ]
   },
   {
     owner: owner2,
@@ -67,7 +77,12 @@ restaurants_data = [
     price_range: :pricey,
     opening_hours: { mon: "17:00-23:00", tue: "17:00-23:00", wed: "17:00-23:00",
                      thu: "17:00-23:00", fri: "17:00-00:00", sat: "17:00-00:00", sun: "17:00-22:00" },
-    is_active: true
+    is_active: true,
+    photo_urls: [
+      "https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&fit=crop",
+      "https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=800&fit=crop",
+      "https://images.unsplash.com/photo-1558030006-450675393462?w=800&fit=crop"
+    ]
   },
   {
     owner: owner2,
@@ -81,7 +96,12 @@ restaurants_data = [
     price_range: :pricey,
     opening_hours: { mon: "11:30-22:00", tue: "11:30-22:00", wed: "11:30-22:00",
                      thu: "11:30-22:00", fri: "11:30-23:00", sat: "12:00-23:00", sun: "12:00-21:00" },
-    is_active: true
+    is_active: true,
+    photo_urls: [
+      "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&fit=crop",
+      "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=800&fit=crop",
+      "https://images.unsplash.com/photo-1516100882582-96c3a05fe590?w=800&fit=crop"
+    ]
   },
   {
     owner: owner1,
@@ -95,7 +115,12 @@ restaurants_data = [
     price_range: :budget,
     opening_hours: { mon: "10:00-21:00", tue: "10:00-21:00", wed: "10:00-21:00",
                      thu: "10:00-21:00", fri: "10:00-22:00", sat: "10:00-22:00", sun: "closed" },
-    is_active: true
+    is_active: true,
+    photo_urls: [
+      "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&fit=crop",
+      "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=800&fit=crop",
+      "https://images.unsplash.com/photo-1559847844-5315695dadae?w=800&fit=crop"
+    ]
   },
   {
     owner: owner2,
@@ -109,16 +134,23 @@ restaurants_data = [
     price_range: :luxury,
     opening_hours: { mon: "closed", tue: "18:00-22:00", wed: "18:00-22:00",
                      thu: "18:00-22:00", fri: "18:00-23:00", sat: "17:00-23:00", sun: "17:00-21:00" },
-    is_active: true
+    is_active: true,
+    photo_urls: [
+      "https://images.unsplash.com/photo-1562802378-063ec186a863?w=800&fit=crop",
+      "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=800&fit=crop",
+      "https://images.unsplash.com/photo-1617196034738-26c5f7c977ce?w=800&fit=crop"
+    ]
   },
 ]
 
 restaurants = restaurants_data.map do |data|
   owner = data.delete(:owner)
-  Restaurant.find_or_create_by!(name: data[:name]) do |r|
-    r.assign_attributes(data)
-    r.owner_id = owner.id
+  r = Restaurant.find_or_create_by!(name: data[:name]) do |rec|
+    rec.assign_attributes(data)
+    rec.owner_id = owner.id
   end
+  r.update!(photo_urls: data[:photo_urls]) # always sync URLs on re-seed
+  r
 end
 
 puts "  #{Restaurant.count} restaurants"
