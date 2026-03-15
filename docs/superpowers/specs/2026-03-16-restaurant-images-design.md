@@ -27,15 +27,7 @@ add_column :restaurants, :photo_urls, :text, array: true, default: []
 
 ### API Response
 
-Override `as_json` on `Restaurant` to include `photo_urls` in all serialization contexts:
-
-```ruby
-def as_json(options = {})
-  super(options.merge(methods: :photo_urls))
-end
-```
-
-Both `GET /api/v1/restaurants` (index) and `GET /api/v1/restaurants/:id` (show) automatically include the field — no controller changes needed.
+`photo_urls` is a plain ActiveRecord column — it is included in `as_json` output automatically. No model or controller changes needed beyond the migration.
 
 ### Seed Data
 
@@ -60,21 +52,26 @@ Add `photo_urls: string[]` to the `Restaurant` interface.
 
 ### `RestaurantCard` (`src/components/swipe/RestaurantCard.tsx`)
 
-Replace the gray placeholder with an image carousel:
+Replace the gray placeholder + bottom info panel with a full-card image area + gradient overlay. The bottom info `<View>` is **removed** — all text moves into the overlay.
+
+**Image switching — state-based, no FlatList:**
+Using a horizontal-scrolling `FlatList` inside the `GestureDetector` pan gesture in `FeedScreen` would cause gesture conflicts (both compete for horizontal touches). Instead, use a simple `photoIndex` state (`useState(0)`) and render a single `Image` at a time. Tapping a dot advances to that image — zero gesture conflict.
 
 - **Container:** full-width, `aspectRatio: 3/4`, `borderRadius: 20`, `overflow: hidden`
-- **Carousel:** `FlatList` with `horizontal`, `pagingEnabled`, `showsHorizontalScrollIndicator: false`; each item renders a full-width `Image` (resizeMode: cover)
-- **Gradient overlay:** `LinearGradient` (transparent → rgba(0,0,0,0.75)) positioned absolutely at the bottom; contains restaurant name, cuisine type, price symbol, and address
-- **Dot indicators:** row of dots positioned absolutely above the gradient bar; active dot is white/full opacity, inactive dots are white/45% opacity
-- **Fallback:** if `photo_urls` is empty, show the existing gray placeholder with 🍜 emoji
+- **Image:** single `Image` component, `resizeMode: cover`, fills the container; source is `photo_urls[photoIndex]`
+- **Gradient overlay:** `LinearGradient` (transparent → rgba(0,0,0,0.75)) positioned absolutely at the bottom; contains restaurant name, cuisine type, price symbol, and address (replaces the removed bottom panel)
+- **Dot indicators:** row of `TouchableOpacity` dots positioned absolutely above the gradient text; tapping a dot sets `photoIndex`. Each `TouchableOpacity` has `padding: 10` for a usable hit area. Active dot visual: white full opacity, 8×8. Inactive: white 45% opacity, 6×6.
+- **Fallback:** if `photo_urls` is empty, show the current gray placeholder with 🍜 emoji
 
 ### Dependencies
 
-- `expo-linear-gradient` — for the gradient overlay (already available in Expo SDK 55, just needs installing)
+- `expo-linear-gradient` — for the gradient overlay (part of Expo SDK 55, includes web support via SVG; install with `npx expo install expo-linear-gradient`)
 - No other new dependencies
+
+**Note on `price_range` serialization:** The `price_range` column is a PostgreSQL integer. Rails `as_json` serializes the raw integer value (e.g., `1`), not the enum string key (`"budget"`). The existing `PRICE_SYMBOLS` lookup keyed by number is correct and unchanged.
 
 ## Out of Scope
 
-- Horizontal swipe on images conflicting with the card pan gesture (image carousel uses tap/scroll within the card; pan gesture on the outer `GestureDetector` handles left/right swipe to like/dislike)
 - Uploading new photos via the owner UI (existing `PhotosController` / ActiveStorage flow unchanged)
 - Lazy loading or image caching optimizations
+- RSpec factory updates (no existing specs assert on restaurant JSON shape)
