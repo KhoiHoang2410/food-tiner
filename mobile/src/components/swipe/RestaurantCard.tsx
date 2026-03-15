@@ -20,15 +20,6 @@ export function RestaurantCard({ restaurant }: Props) {
           <View style={styles.placeholder}>
             <Text style={styles.placeholderEmoji}>🍜</Text>
           </View>
-          <View style={styles.infoPanel}>
-            <Text style={styles.name}>{restaurant.name}</Text>
-            <View style={styles.meta}>
-              <Text style={styles.metaText}>{restaurant.cuisine_type}</Text>
-              <Text style={styles.separatorDot}>·</Text>
-              <Text style={styles.metaText}>{PRICE_SYMBOLS[restaurant.price_range] ?? '$$'}</Text>
-            </View>
-            <Text style={styles.address} numberOfLines={1}>{restaurant.address}</Text>
-          </View>
         </View>
       </View>
     );
@@ -99,34 +90,6 @@ const styles = StyleSheet.create({
   },
   placeholderEmoji: {
     fontSize: 48,
-  },
-  infoPanel: {
-    padding: 16,
-    backgroundColor: 'white',
-  },
-  name: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#111827',
-  },
-  meta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
-    gap: 8,
-  },
-  metaText: {
-    color: '#6b7280',
-    fontSize: 14,
-  },
-  separatorDot: {
-    color: '#9ca3af',
-    fontSize: 14,
-  },
-  address: {
-    color: '#9ca3af',
-    fontSize: 13,
-    marginTop: 4,
   },
   gradient: {
     position: 'absolute',
