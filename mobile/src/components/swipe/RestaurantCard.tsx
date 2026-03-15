@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { Restaurant } from '../../hooks/useRestaurants';
@@ -12,6 +12,8 @@ const PRICE_SYMBOLS: Record<number, string> = { 1: '$', 2: '$$', 3: '$$$', 4: '$
 export function RestaurantCard({ restaurant }: Props) {
   const [photoIndex, setPhotoIndex] = useState(0);
   const photos = restaurant.photo_urls ?? [];
+
+  useEffect(() => { setPhotoIndex(0); }, [restaurant.id]);
 
   if (photos.length === 0) {
     return (
