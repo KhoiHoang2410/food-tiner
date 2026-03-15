@@ -13,6 +13,7 @@ export interface Restaurant {
   phone: string;
   opening_hours: Record<string, string>;
   is_active: boolean;
+  photo_urls: string[];
 }
 
 export function useSwipeFeed(lat: number, lng: number) {
